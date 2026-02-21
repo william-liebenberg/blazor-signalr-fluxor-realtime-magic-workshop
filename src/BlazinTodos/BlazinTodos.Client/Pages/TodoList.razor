@@ -1,0 +1,93 @@
+﻿@page "/todos"
+
+@inject IState<ToDoState> TodoState
+@inject IDispatcher Dispatcher
+@inject HttpClient Http
+@inject HubConnection TodoHubConnection
+@inject TodoHubActionBinder HubActionBinder
+
+@inherits FluxorComponent
+
+<h3>To-Do List</h3>
+
+<ul>
+    @foreach (var todo in TodoState.Value.ToDos)
+    {
+        <li>
+            <input type="checkbox"
+                   checked="@todo.Completed"
+                   @onchange="e => OnCompletedChanged(todo, e)" />
+
+            <input type="text"
+                   value="@todo.Title"
+                   @oninput="e => OnTitleChanged(todo, e)" />
+
+            <button @onclick="() => DeleteToDo(todo.Id)">Delete</button>
+        </li>
+    }
+</ul>
+
+<input type="text" @bind="newToDoTitle" placeholder="New To-Do Title" />
+<button @onclick="AddToDo">Add To-Do</button>
+
+@code {
+    private string? newToDoTitle;
+
+    private Task OnCompletedChanged(ToDoItem todo, ChangeEventArgs e)
+    {
+        var isChecked = e.Value is bool b && b;
+        return isChecked ? CompleteToDo(todo) : ResetToDo(todo);
+    }
+
+    private Task OnTitleChanged(ToDoItem todo, ChangeEventArgs e)
+    {
+        todo.Title = e.Value?.ToString() ?? string.Empty;
+        return UpdateToDo(todo);
+    }
+
+    private async Task AddToDo()
+    {
+        var newToDo = new ToDoItem { Title = newToDoTitle };
+        var response = await Http.PostAsJsonAsync("/api/todos", newToDo);
+        if (response.IsSuccessStatusCode)
+        {
+            newToDoTitle = string.Empty;
+        }
+    }
+
+    private async Task UpdateToDo(ToDoItem todo)
+    {
+        var response = await Http.PutAsJsonAsync($"/api/todos/{todo.Id}", todo);
+    }
+
+    private async Task CompleteToDo(ToDoItem todo)
+    {
+        var response = await Http.PutAsync($"/api/todos/{todo.Id}/complete", null);
+    }
+
+    private async Task ResetToDo(ToDoItem todo)
+    {
+        var response = await Http.PutAsync($"/api/todos/{todo.Id}/reset", null);
+    }
+
+    private async Task DeleteToDo(Guid todoId)
+    {
+        var response = await Http.DeleteAsync($"/api/todos/{todoId}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Throttle UI state change notifications to prevent UI overload during rapid updates
+        this.MaximumStateChangedNotificationsPerSecond = 2;
+
+        await base.OnInitializedAsync();
+        
+        await HubActionBinder.Bind();
+
+        var response = await Http.GetFromJsonAsync<ToDoItem[]>("/api/todos");
+        if (response != null)
+        {
+            Dispatcher.Dispatch(new InitToDosAction(response));
+        }
+    }
+}

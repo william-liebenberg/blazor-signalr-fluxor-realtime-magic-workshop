@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="BlazinTodos.Client/BlazinTodos.Client.csproj" />
+  <Project Path="BlazinTodos.Shared/BlazinTodos.Shared.csproj" />
+  <Project Path="BlazinTodos/BlazinTodos.csproj" />
+</Solution>
