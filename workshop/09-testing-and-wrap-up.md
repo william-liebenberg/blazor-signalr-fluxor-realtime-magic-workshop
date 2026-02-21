@@ -40,9 +40,8 @@ Every action you take in one tab should be reflected in all other tabs in real-t
 
 If your machine and phone are on the same network, you can open the app on your phone's browser too. Find your machine's local IP address and navigate to `https://<your-ip>:<port>/todos`.
 
-Alternatively, if you are using Visual Studio 2022/2026 you can create a DevTunnel with a public URL that will proxy back to your local machine. Check out: 
+Alternatively, if you are using Visual Studio 2022/2026 you can create a [DevTunnel](https://learn.microsoft.com/en-us/connectors/custom-connectors/port-tunneling) with a public URL that will proxy back to your local machine.
 
-Edit -> Other Windows -> Dev Tunnels
 ## Final commit
 
 ```powershell
