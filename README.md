@@ -66,7 +66,7 @@ The workshop is divided into 9 hands-on sections. You'll commit your work at the
 
 If you fall behind or want to reference the finished application, the complete source code is available here:
 
-🔗 **[github.com/william-liebenberg/blazor-signalr-fluxor-realtime-magic-workshop/src](https://github.com/william-liebenberg/blazor-signalr-fluxor-realtime-magic-workshop/src)**
+🔗 **[github.com/william-liebenberg/blazor-signalr-fluxor-realtime-magic-workshop/tree/main/src/BlazinTodos](https://github.com/william-liebenberg/blazor-signalr-fluxor-realtime-magic-workshop/tree/main/src/BlazinTodos)**
 
 ---
 
